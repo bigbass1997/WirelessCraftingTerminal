@@ -190,7 +190,7 @@ public class CommonProxy {
 		ItemStack stack = itemEntity.getEntityItem();
 		InventoryPlayer playerInv = player.inventory;
 		World world = player.getEntityWorld();
-		if (world.isRemote) {
+		if (playerInv == null || world.isRemote) {
 			return;
 		}
 		if (Reference.WCT_BOOSTER_ENABLED && !Reference.WCT_EASYMODE_ENABLED) {
