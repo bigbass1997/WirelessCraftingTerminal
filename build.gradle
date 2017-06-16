@@ -62,14 +62,37 @@ repositories {
         name "ChickenBones"
         url "http://chickenbones.net/maven/"
     }
+	maven { // EnderIO & EnderCore
+		name 'tterrag Repo'
+		url "http://maven.tterrag.com"
+	}
+	ivy {
+		name 'CoFHCore'
+		artifactPattern "http://addons-origin.cursecdn.com/files/2388/751/[module]-[revision].[ext]"
+	}
+	ivy {
+		name 'p455w0rdslib'
+		artifactPattern "https://addons-origin.cursecdn.com/files/2359/471/[module]-[revision].[ext]"
+	}
+	ivy {
+		name 'logisticspipes'
+		artifactPattern "https://addons-origin.cursecdn.com/files/2312/257/[module]-[revision].[ext]"
+	}
 }
 
 dependencies {
 	compile("appeng:appliedenergistics2:rv3-beta-5:dev") {
 		transitive = false
     }
+	compile("com.enderio:EnderIO:1.7.10-2.3.0.417_beta:dev") {
+		transitive = false
+    }
 	compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
 	compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+	compile "com.enderio.core:EnderCore:1.7.10-0.1.0.25_beta:dev"
+	compile name: 'CoFHCore', version: '[1.7.10]3.1.4-329-dev', ext: 'jar'
+	compile name: 'p455w0rdslib', version: '1.7.10-1.0.4', ext: 'jar'
+	compile name: 'logisticspipes', version: '0.9.3.126', ext: 'jar'
 }
 
 sourceSets {
