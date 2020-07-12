@@ -21,3 +21,4 @@ WirelessCraftingTerminal.iml
 WirelessCraftingTerminal.ipr
 WirelessCraftingTerminal.iws
 *.bat
+out/
