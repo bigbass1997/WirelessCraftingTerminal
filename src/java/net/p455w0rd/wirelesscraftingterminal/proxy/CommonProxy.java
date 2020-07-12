@@ -281,11 +281,11 @@ public class CommonProxy {
 		if (event.player == null || event.player.isDead || event.player instanceof FakePlayer || event.crafting == null) {
 			return;
 		}
-		if (Loader.isModLoaded("LogisticsPipes")) {
-			if (event.player instanceof logisticspipes.blocks.crafting.FakePlayer) {
-				return;
-			}
-		}
+		//if (Loader.isModLoaded("LogisticsPipes")) {
+			//if (event.player instanceof logisticspipes.blocks.crafting.FakePlayer) {
+				//return;
+			//}
+		//}
 		if (event.crafting.getItem() == ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem()) {
 			AchievementHandler.triggerAch(wctAch, event.player);
 		}
