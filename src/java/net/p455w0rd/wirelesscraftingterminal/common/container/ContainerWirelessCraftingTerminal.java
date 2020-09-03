@@ -66,6 +66,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -108,6 +109,7 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketPartialItem
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+
 
 public class ContainerWirelessCraftingTerminal extends Container implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEItemStack>, IAEAppEngInventory, IContainerCraftingPacket {
 
@@ -163,6 +165,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 	private IWirelessCraftingTerminalItem thisItem;
 	private IGridNode networkNode;
 	private IMEInventoryHandler<IAEItemStack> cellInv;
+    private IRecipe currentRecipe;
 
 	/**
 	 * Constructor for our custom container
@@ -305,16 +308,34 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		return ((AppEngSlot) s).isDraggable();
 	}
 
-	@Override
+    private IRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World worldIn) {
+        for (Object recipe : CraftingManager.getInstance().getRecipeList()) {
+            if (((IRecipe)recipe).matches(craftMatrix, worldIn)) {
+                return (IRecipe)recipe;
+            }
+        }
+        return null;
+    }
+
+    @Override
 	public void onCraftMatrixChanged(final IInventory iinv) {
 
 		final ContainerNull cn = new ContainerNull();
-		final InventoryCrafting ic = new InventoryCrafting(cn, 3, 3);
+		final InventoryCrafting craftingInv = new InventoryCrafting(cn, 3, 3);
 
-		for (int x = 0; x < 9; x++) {
-			ic.setInventorySlotContents(x, this.craftMatrixSlot[x].getStack());
-		}
-		this.craftingSlot.putStack(CraftingManager.getInstance().findMatchingRecipe(ic, this.worldObj));
+        for (int x = 0; x < 9; x++) {
+            craftingInv.setInventorySlotContents(x, craftMatrixSlot[x].getStack());
+        }
+        if (currentRecipe == null || !currentRecipe.matches(craftingInv, getPlayerInv().player.worldObj)) {
+            currentRecipe = findMatchingRecipe(craftingInv, getPlayerInv().player.worldObj);
+        }
+        if (currentRecipe == null) {
+            craftingSlot.putStack(null);
+        }
+        else {
+            final ItemStack craftingResult = currentRecipe.getCraftingResult(craftingInv);
+            craftingSlot.putStack(craftingResult);
+        }
 		writeToNBT("crafting");
 	}
 
