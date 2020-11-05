@@ -1,8 +1,10 @@
 package net.p455w0rd.wirelesscraftingterminal.common.utils;
 
+import baubles.api.BaublesApi;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -58,6 +60,21 @@ public class RandomUtils {
 				break;
 			}
 		}
+        IInventory handler = BaublesApi.getBaubles(playerInv.player);
+        if (handler != null)
+        {
+            invSize = handler.getSizeInventory();
+            for (int i = 0; i < invSize; ++i) {
+                ItemStack item = handler.getStackInSlot(i);
+                if (item == null) {
+                    continue;
+                }
+                if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                    wirelessTerm = item;
+                    break;
+                }
+            }
+        }
 		return wirelessTerm;
 	}
 

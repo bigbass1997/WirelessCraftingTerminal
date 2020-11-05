@@ -6,6 +6,7 @@ import java.util.Random;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.data.IAEItemStack;
+import baubles.api.BaublesApi;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -82,39 +83,55 @@ public class CommonProxy {
 		else {
 			playerInv = player.inventory;
 		}
-		int invSize = playerInv.getSizeInventory();
-		if (invSize <= 0) {
-			return;
-		}
-		for (int i = 0; i < invSize; ++i) {
-			ItemStack item = playerInv.getStackInSlot(i);
-			if (item == null) {
-				continue;
-			}
-			if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
-				wirelessTerm = item;
-			}
-			if (wirelessTerm == null) {
-				continue;
-			}
-			if (wirelessTerm.hasTagCompound()) {
-				NBTTagCompound nbtTC = wirelessTerm.getTagCompound();
-				NBTTagList tagList = nbtTC.getTagList("MagnetSlot", 10);
-				if (tagList != null) {
-					NBTTagCompound magCompound = tagList.getCompoundTagAt(0);
-					if (magCompound != null) {
-						ItemStack magnetItem = ItemStack.loadItemStackFromNBT(magCompound);
-						if (magnetItem != null) {
-							((ItemMagnet) magnetItem.getItem()).setItemStack(magnetItem);
-							if (magnetItem.getItem() instanceof ItemMagnet) {
-								((ItemMagnet) magnetItem.getItem()).doMagnet(magnetItem, e.player.worldObj, e.player, wirelessTerm);
-								continue;
-							}
-						}
-					}
-				}
-			}
-		}
+        IInventory handler = BaublesApi.getBaubles(player);
+        if (handler != null)
+        {
+            for (int i = 0; i < handler.getSizeInventory(); ++i) {
+                ItemStack item = handler.getStackInSlot(i);
+                if (item == null) {
+                    continue;
+                }
+                if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                    wirelessTerm = item;
+                    break;
+                }
+            }
+        }
+        if (wirelessTerm == null) {
+            int invSize = playerInv.getSizeInventory();
+            if (invSize <= 0) {
+                return;
+            }
+            for (int i = 0; i < invSize; ++i) {
+                ItemStack item = playerInv.getStackInSlot(i);
+                if (item == null) {
+                    continue;
+                }
+                if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                    wirelessTerm = item;
+                    break;
+                }
+            }
+        }
+        if (wirelessTerm == null) {
+            return;
+        }
+        if (wirelessTerm.hasTagCompound()) {
+            NBTTagCompound nbtTC = wirelessTerm.getTagCompound();
+            NBTTagList tagList = nbtTC.getTagList("MagnetSlot", 10);
+            if (tagList != null) {
+                NBTTagCompound magCompound = tagList.getCompoundTagAt(0);
+                if (magCompound != null) {
+                    ItemStack magnetItem = ItemStack.loadItemStackFromNBT(magCompound);
+                    if (magnetItem != null) {
+                        ((ItemMagnet) magnetItem.getItem()).setItemStack(magnetItem);
+                        if (magnetItem.getItem() instanceof ItemMagnet) {
+                            ((ItemMagnet) magnetItem.getItem()).doMagnet(magnetItem, e.player.worldObj, e.player, wirelessTerm);
+                        }
+                    }
+                }
+            }
+        }
 	}
 
 	@SubscribeEvent
@@ -148,12 +165,15 @@ public class CommonProxy {
 			 * AchievementHandler.addAchievementToPage(AchievementHandler.
 			 * boosterAch, true, e.player); }
 			 */
+
+            /* NH fork definitely does not need version checking
 			if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
 				WCTLog.info("Dev environment detected, skipping version check");
 			}
 			else {
 				new VersionCheckHandler();
 			}
+			*/
 		}
 		else {
 			final PacketConfigSync p = new PacketConfigSync(Reference.WCT_MAX_POWER, Reference.WCT_EASYMODE_ENABLED, Reference.WCT_BOOSTER_ENABLED, Reference.WCT_BOOSTER_DROPCHANCE, Reference.WCT_MINETWEAKER_OVERRIDE);
