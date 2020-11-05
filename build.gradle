@@ -66,8 +66,10 @@ repositories {
 		name 'tterrag Repo'
 		url "http://maven.tterrag.com"
 	}
-		maven { // AE2
-		name 'ae2 repo'
+    maven {
+        url = "http://gregtech.overminddl1.com/"
+    }
+	maven {
 		url "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/"
 	}
 }
@@ -81,7 +83,9 @@ dependencies {
     }
 	compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
 	compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
 	compile "com.enderio.core:EnderCore:1.7.10-0.1.0.25_beta:dev"
+    compile "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
 }
 
 sourceSets {

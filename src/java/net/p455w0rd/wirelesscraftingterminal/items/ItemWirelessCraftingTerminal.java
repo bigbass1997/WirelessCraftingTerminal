@@ -18,11 +18,14 @@ import appeng.items.tools.powered.powersink.AERootPoweredItem;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -38,7 +41,7 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
-public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements IWirelessCraftingTerminalItem {
+public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements IWirelessCraftingTerminalItem, IBauble {
 
 	public static final String LINK_KEY_STRING = "key";
 	public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
@@ -82,7 +85,70 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements I
 		return false;
 	}
 
-	private boolean isMagnetInstalled(final ItemStack wirelessTerminal) {
+    /**
+     * This method return the type of bauble this is.
+     * Type is used to determine the slots it can go into.
+     *
+     * @param itemstack
+     */
+    @Override
+    public BaubleType getBaubleType(ItemStack itemstack) {
+        return BaubleType.RING;
+    }
+
+    /**
+     * This method is called once per tick if the bauble is being worn by a player
+     *
+     * @param itemstack
+     * @param player
+     */
+    @Override
+    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+    }
+
+    /**
+     * This method is called when the bauble is equipped by a player
+     *
+     * @param itemstack
+     * @param player
+     */
+    @Override
+    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
+    }
+
+    /**
+     * This method is called when the bauble is unequipped by a player
+     *
+     * @param itemstack
+     * @param player
+     */
+    @Override
+    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
+    }
+
+    /**
+     * can this bauble be placed in a bauble slot
+     *
+     * @param itemstack
+     * @param player
+     */
+    @Override
+    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
+        return true;
+    }
+
+    /**
+     * Can this bauble be removed from a bauble slot
+     *
+     * @param itemstack
+     * @param player
+     */
+    @Override
+    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
+        return true;
+    }
+
+    private boolean isMagnetInstalled(final ItemStack wirelessTerminal) {
 		if (wirelessTerminal.hasTagCompound()) {
 			NBTTagList magnetNBTList = wirelessTerminal.getTagCompound().getTagList(MAGNET_SLOT_NBT, 10);
 			if (magnetNBTList != null) {
