@@ -53,6 +53,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import net.p455w0rd.wirelesscraftingterminal.api.WCTApi;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiScrollbar;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTabButton;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTrashButton;
@@ -922,9 +924,12 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 					final List<Slot> slots = this.getInventorySlots();
 					for (final Slot s : slots) {
 						if (s.getSlotIndex() == j && s.inventory == ((ContainerWirelessCraftingTerminal) this.inventorySlots).getPlayerInv()) {
-							if (!s.canTakeStack(((ContainerWirelessCraftingTerminal) this.inventorySlots).getPlayerInv().player)) {
+						    if (s.getStack() != null && s.getStack().getItem() == WCTApi.instance().items().WirelessCraftingTerminal.getItem())
+						        return false;
+							if (!s.canTakeStack(((ContainerWirelessCraftingTerminal) this.inventorySlots).getPlayerInv().player))
 								return false;
-							}
+							else
+							    break;
 						}
 					}
 
